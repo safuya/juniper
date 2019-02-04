@@ -19,9 +19,7 @@ With Python==3.6 and Docker installed, install juniper:
 
 .. code-block:: text
 
-    > git clone git@github.com:eabglobal/juniper.git
-    > cd juniper
-    > pip install -e .
+    > pip install juniper
 
 Go to the code you are packaging and define a configuration for your
 functions, ex in `manifest.yml`:
@@ -29,12 +27,11 @@ functions, ex in `manifest.yml`:
 .. code-block:: yaml
 
     functions:
-    router:                                         # Name of the lambda function (result in router.zip artifact)
+      router:            # Name of the lambda function (result in router.zip artifact)
         requirements: ./src/router/requirements.txt.  # Path to reqs file
         include:
-        - ./src/commonlib/mylib                     # Path for inclusion in code
-        - ./src/router_function/router.             # Path for inclusion in code
-
+        - ./src/commonlib/mylib                     # Include this in the zip
+        - ./src/router_function/router              # Include this in the zip
 
 Build it!
 
@@ -43,6 +40,35 @@ Build it!
     > juni build
 
 Your .zip is now in the `dist/` directory.  🎉
+
+juni build
+**********
+
+After installing juniper, and writing you manifest file, in its most basic form
+`juni build` does the following:
+
+* By default looks for a file called **manifest.yml**
+* It outputs the .zip artifacts into a folder called **./dist**
+
+These default values can be configured. To set the path of the manifest use:
+
+    > juni build -m ./my_manifest_definition.yml
+
+To update the output directory of the artifacts. Include the following section
+in the manifest file:
+
+.. code-block:: yaml
+
+    package:
+      output: ./build
+
+    functions:
+      router:
+        requirements: ./src/router/requirements.txt.  # Path to reqs file
+        include:
+          - ./src/router_function/router              # Include this in the zip
+
+In this case, the artifacts will be stored in a `./build` directory.
 
 Features
 ********
